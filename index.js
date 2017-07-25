@@ -245,11 +245,13 @@ HttpDoorControllerAccessory.prototype = {
 			that._setDoorTargetState(newState);
 
 			if (newState == DoorState.UNSECURED) {
-				
-				that.log.info(" !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! Innerhalb If-Abfrage für Timeout %s",console.time("test"));
+				var begin=Date.now();
+				that.log.info("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! Innerhalb If-Abfrage für Timeout %s",console.time("test"));
 				setTimeout(function() { 
-					that.log.info(" !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! Innerhalb SetTimeout",console.timeEnd("test"));
-				},30000);
+					var end= Date.now();
+					var timeSpent=(end-begin)/1000+"secs";
+					that.log.info("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! Innerhalb SetTimeout",timeSpent);
+				},4 * 1000 * 2);
 			}
 
 		/*

@@ -243,7 +243,16 @@ HttpDoorControllerAccessory.prototype = {
 			}
 
 			that._setDoorTargetState(newState);
-		
+
+			if (newState == DoorState.UNSECURED) {
+				
+				that.log.info(" !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! Innerhalb If-Abfrage für Timeout");
+				setTimeout(function() { 
+					that.log.info(" !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! Innerhalb SetTimeout");
+				},4000);
+			}
+
+		/*
 			// When no status is available, create a callback to set current state to target state after the specified amount of time
 			if (!that._hasDoorState()) {
 				var setDoorTargetStateFinal = function() {
@@ -252,7 +261,7 @@ HttpDoorControllerAccessory.prototype = {
 
 				setTimeout(setDoorTargetStateFinal.bind(that), that.doorOperationSeconds * 1000);
 			}
-			
+		*/	
 			callback();
 		});
 	},

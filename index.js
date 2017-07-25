@@ -88,6 +88,10 @@ function HttpDoorControllerAccessory(log, config) {
 			configurationValid = false;
 		}
 	}
+	// set doorOperationSeconds never the less, but only if it was not set before and >0
+	if (!this.doorOperationSeconds && parseInt(getConfigValue(config, "doorOperationSeconds", 0))>0) {
+	this.doorOperationSeconds = parseInt(getConfigValue(config, "doorOperationSeconds", 0));
+	}
 	
 	this.doorOpenUrl = getConfigValue(config, "doorOpenUrl", null);
 	if (!this.doorOpenUrl) {
@@ -244,25 +248,16 @@ HttpDoorControllerAccessory.prototype = {
 
 			that._setDoorTargetState(newState);
 
-			if (newState == DoorState.UNSECURED) {
+			if (newState == DoorState.UNSECURED && this.doorOperationSeconds) {
 				var begin=Date.now();
 				that.log.info("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! Innerhalb If-Abfrage für Timeout");
-				that.log.info(this.doorOperationSeconds);
-that.log.info(that.doorOperationSeconds);
-that.log.info(self.doorOperationSeconds);
-
-				var self = that;
 				setTimeout(function() { 
 					var end= Date.now();
 					var timeSpent=(end-begin)/1000+"secs";
 that.log.info(this.doorOperationSeconds);
 that.log.info(that.doorOperationSeconds);
-that.log.info(self.doorOperationSeconds);
-that.log.info("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! 1doorOperationSeconds %i",this.doorOperationSeconds);
-that.log.info("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! 2doorOperationSeconds %i",that.doorOperationSeconds);
-that.log.info("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! 3doorOperationSeconds %i",self.doorOperationSeconds);
 that.log.info("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! Innerhalb SetTimeout",timeSpent);
-				},4 * 1000);
+				},that.doorOperationSeconds * 1000);
 			}
 
 		/*

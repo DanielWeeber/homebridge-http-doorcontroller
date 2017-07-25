@@ -94,10 +94,7 @@ function HttpDoorControllerAccessory(log, config) {
 	}
 	
 	this.doorOpenUrl = getConfigValue(config, "doorOperationCloseAfterOpenAuto", false);
-	if (!this.doorOperationCloseAfterOpenAuto) {
-		this.log.error("ERROR - Missing or invalid configuration field 'doorOperationCloseAfterOpenAuto'");
-		configurationValid = false;
-	}
+
 	
 	this.doorOpenUrl = getConfigValue(config, "doorOpenUrl", null);
 	if (!this.doorOpenUrl) {

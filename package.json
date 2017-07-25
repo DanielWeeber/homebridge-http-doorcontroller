@@ -1,6 +1,6 @@
 {
   "name": "homebridge-http-doorcontroller",
-  "version": "1.2.7",
+  "version": "1.2.8",
   "description": "Exposes a door accessory and garage light to HomeBridge that operates via HTTP requests",
   "main": "index.js",
   "scripts": {

@@ -1,0 +1,34 @@
+{
+  "name": "homebridge-http-doorcontroller",
+  "version": "1.1.57",
+  "description": "Exposes a door accessory and garage light to HomeBridge that operates via HTTP requests",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "homebridge-plugin",
+    "homekit",
+    "homebridge",
+    "door",
+    "http"
+  ],
+  "author": "Daniel Weeber <daniel.weeber@halbe.com>",
+  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/DanielWeeber/homebridge-http-doorcontroller.git"
+  },
+  "bugs": {
+    "url": "https://github.com/DanielWeeber/homebridge-http-doorcontroller/issues"
+  },
+  "homepage": "https://github.com/DanielWeeber/homebridge-http-doorcontroller",
+  "engines": {
+    "node": ">=6.10.0",
+    "homebridge": ">=0.4.10"
+  },
+  "dependencies": {
+    "locks": ">=0.2.2",
+    "request": ">=2.81.0"
+  }
+}

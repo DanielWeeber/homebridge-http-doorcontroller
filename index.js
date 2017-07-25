@@ -246,12 +246,12 @@ HttpDoorControllerAccessory.prototype = {
 
 			if (newState == DoorState.UNSECURED) {
 				var begin=Date.now();
-				that.log.info("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! Innerhalb If-Abfrage für Timeout %s",console.time("test"));
+				that.log.info("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! Innerhalb If-Abfrage für Timeout");
 				setTimeout(function() { 
 					var end= Date.now();
 					var timeSpent=(end-begin)/1000+"secs";
 					that.log.info("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! Innerhalb SetTimeout",timeSpent);
-				},4 * 1000 * 2);
+				},that.doorOperationSeconds * 1000);
 			}
 
 		/*

@@ -247,6 +247,10 @@ HttpDoorControllerAccessory.prototype = {
 			if (newState == DoorState.UNSECURED) {
 				var begin=Date.now();
 				that.log.info("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! Innerhalb If-Abfrage für Timeout");
+				that.log.info(this.doorOperationSeconds);
+that.log.info(that.doorOperationSeconds);
+that.log.info(self.doorOperationSeconds);
+
 				var self = that;
 				setTimeout(function() { 
 					var end= Date.now();

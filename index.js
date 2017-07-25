@@ -93,6 +93,12 @@ function HttpDoorControllerAccessory(log, config) {
 	this.doorOperationSeconds = parseInt(getConfigValue(config, "doorOperationSeconds", 0));
 	}
 	
+	this.doorOpenUrl = getConfigValue(config, "doorOperationCloseAfterOpenAuto", false);
+	if (!this.doorOperationCloseAfterOpenAuto) {
+		this.log.error("ERROR - Missing or invalid configuration field 'doorOperationCloseAfterOpenAuto'");
+		configurationValid = false;
+	}
+	
 	this.doorOpenUrl = getConfigValue(config, "doorOpenUrl", null);
 	if (!this.doorOpenUrl) {
 		this.log.error("ERROR - Missing or invalid configuration field 'doorOpenUrl'");
@@ -248,7 +254,7 @@ HttpDoorControllerAccessory.prototype = {
 
 			that._setDoorTargetState(newState);
 
-			if (newState == DoorState.UNSECURED && that.doorOperationSeconds) {
+			if (newState == DoorState.UNSECURED && that.doorOperationSeconds && that.doorOperationCloseAfterOpenAuto) {
 				var begin=Date.now();
 				that.log.info("Entered setDoorTargetState.BeforeTimeoutEnds");
 				setTimeout(function() { 
@@ -256,7 +262,17 @@ HttpDoorControllerAccessory.prototype = {
 					var timeSpent=(end-begin)/1000+"secs";
 					that.log.info("Entered setDoorTargetState.AfterTimeoutEnds. Timeout was %s",timeSpent);
 					
-					that._httpRequest("GET", that.doorCloseUrl, that.doorSuccessField, true, function(error, response, json) {});
+					that._httpRequest("GET", that.doorCloseUrl, that.doorSuccessField, true, function(error, response, json) {
+						if (error) {
+							var error = new Error("ERROR in setDoorTargetState.AfterTimeoutEnds() - " + error.message);
+							that.log.error(error.message);
+							callback(error);
+							return;
+						}
+
+					that._setDoorTargetState(newState);
+						
+					});
 					
 					
 					

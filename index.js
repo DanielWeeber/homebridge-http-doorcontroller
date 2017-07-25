@@ -250,13 +250,16 @@ HttpDoorControllerAccessory.prototype = {
 
 			if (newState == DoorState.UNSECURED && that.doorOperationSeconds) {
 				var begin=Date.now();
-				that.log.info("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! Innerhalb If-Abfrage für Timeout");
+				that.log.info("Entered setDoorTargetState.BeforeTimeoutEnds");
 				setTimeout(function() { 
 					var end= Date.now();
 					var timeSpent=(end-begin)/1000+"secs";
-that.log.info(this.doorOperationSeconds);
-that.log.info(that.doorOperationSeconds);
-that.log.info("!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! Innerhalb SetTimeout",timeSpent);
+					that.log.info("Entered setDoorTargetState.AfterTimeoutEnds. Timeout was %s",timeSpent);
+					
+					that._httpRequest("GET", that.doorCloseUrl, that.doorSuccessField, true, done());
+					
+					
+					
 				},that.doorOperationSeconds * 1000);
 			}
 

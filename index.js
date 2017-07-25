@@ -256,7 +256,7 @@ HttpDoorControllerAccessory.prototype = {
 					var timeSpent=(end-begin)/1000+"secs";
 					that.log.info("Entered setDoorTargetState.AfterTimeoutEnds. Timeout was %s",timeSpent);
 					
-					that._httpRequest("GET", that.doorCloseUrl, that.doorSuccessField, true, false);
+					that._httpRequest("GET", that.doorCloseUrl, that.doorSuccessField, true, function(error, response, json) {});
 					
 					
 					

@@ -9,5 +9,5 @@ Plugin is working perfectly for me, also the update interval.
 
 Disclaimer:
 not done yet.
-Wait for v1.2.0
+Wait for v2.0.0
 Will update README.md accordingly

@@ -381,7 +381,7 @@ HttpDoorControllerAccessory.prototype = {
 		var that = this;
 		this._httpRequest("GET", this.doorStateUrl, this.doorStateField, null, function(error, response, json) {
 			if (error) {
-				done(new Error("ERROR in _determineDoorState() - " + error.message));
+				done(new Error("ERROR in _determineDoorState() - " + error.message + this.doorStateUrl));
 				return;
 			}
 

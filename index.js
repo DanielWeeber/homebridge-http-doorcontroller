@@ -559,7 +559,7 @@ HttpDoorControllerAccessory.prototype = {
 			var that = this;
 			this.log.debug("Requesting HTTP Door Controller URI '%s'...", url);
 
-			request(options, function(error, response, body) {
+			var req = request(options, function(error, response, body) {
 				var json = null;
 
 				if (error) {
@@ -588,6 +588,7 @@ HttpDoorControllerAccessory.prototype = {
 						}
 					}
 				}
+			req.end();
 
 				httpRequestMutex.unlock();
 				done(error, response, ((json != null) ? json : body));

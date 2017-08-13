@@ -253,11 +253,11 @@ HttpDoorControllerAccessory.prototype = {
 
 			if (newState == DoorState.UNSECURED && that.doorOperationSeconds && that.doorOperationCloseAfterOpenAuto) {
 				var begin=Date.now();
-				that.log.info("Entered setDoorTargetState.BeforeTimeoutEnds");
+				that.log.debug("Entered setDoorTargetState.BeforeTimeoutEnds");
 				setTimeout(function() { 
 					var end= Date.now();
 					var timeSpent=(end-begin)/1000+"secs";
-					that.log.info("Entered setDoorTargetState.AfterTimeoutEnds. Timeout was %s",timeSpent);
+					that.log.debug("Entered setDoorTargetState.AfterTimeoutEnds. Timeout was %s",timeSpent);
 					
 					that._httpRequest("GET", that.doorCloseUrl, that.doorSuccessField, true, function(error, response, json) {
 						if (error) {

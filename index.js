@@ -93,7 +93,7 @@ function HttpDoorControllerAccessory(log, config) {
 	this.doorOperationSeconds = parseInt(getConfigValue(config, "doorOperationSeconds", 0));
 	}
 	
-	this.doorOpenUrl = getConfigValue(config, "doorOperationCloseAfterOpenAuto", false);
+	this.doorOperationCloseAfterOpenAuto = getConfigValue(config, "doorOperationCloseAfterOpenAuto", false);
 
 	
 	this.doorOpenUrl = getConfigValue(config, "doorOpenUrl", null);

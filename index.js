@@ -249,7 +249,7 @@ HttpDoorControllerAccessory.prototype = {
 				return;
 			}
 
-			that._setDoorTargetState(newState);
+			that._setDoorTargetState(newState, false, false);
 
 			
 		});

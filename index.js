@@ -249,7 +249,8 @@ HttpDoorControllerAccessory.prototype = {
 				return;
 			}
 
-			that._setDoorTargetState(newState, false, false);
+			that._setDoorTargetState(newState);
+			that.DoorCurrentState.setValue(newState);
 
 			
 		});

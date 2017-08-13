@@ -17,7 +17,6 @@ module.exports = function(homebridge) {
 
 function getConfigValue(config, key, defaultVal) {
 	var val = config[key];
-
 	if (val == null) {
 		return defaultVal;
 	}

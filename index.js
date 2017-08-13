@@ -256,7 +256,7 @@ HttpDoorControllerAccessory.prototype = {
 
 			that._setDoorTargetState(newState);
 
-			if (newState == 0 && that.doorOperationSeconds && that.doorOperationCloseAfterOpenAuto) {
+			if (newState == 100 && that.doorOperationSeconds && that.doorOperationCloseAfterOpenAuto) {
 				var begin=Date.now();
 				that.log.debug("Entered setDoorTargetState.BeforeTimeoutEnds");
 				setTimeout(function() { 

@@ -184,17 +184,22 @@ HttpDoorControllerAccessory.prototype = {
 	initServices: function() {
 		this.log.debug("Entered initServices()");
 
-		this.DoorService = new Service.LockMechanism(this.name);
-
-		this.DoorCurrentState = this.DoorService.getCharacteristic(Characteristic.LockCurrentState);
+		//this.DoorService = new Service.LockMechanism(this.name);
+		this.DoorService = new Service.Door(this.name);
+		//this.DoorCurrentState = this.DoorService.getCharacteristic(Characteristic.LockCurrentState);
+		this.DoorCurrentState = this.DoorService.getCharacteristic(Characteristic.CurrentPosition);
 		this.DoorCurrentState.on("get", this.getDoorCurrentState.bind(this));
 
-		this.DoorTargetState = this.DoorService.getCharacteristic(Characteristic.LockTargetState);
+		//this.DoorTargetState = this.DoorService.getCharacteristic(Characteristic.LockTargetState);
+		this.DoorTargetState = this.DoorService.getCharacteristic(Characteristic.TargetPosition);
 		this.DoorTargetState.on("get", this.getDoorTargetState.bind(this));
 		this.DoorTargetState.on("set", this.setDoorTargetState.bind(this));
 
-		this._doorTargetState = DoorState.SECURED;
-		this._doorCurrentState = DoorState.SECURED;
+		//this._doorTargetState = DoorState.SECURED;
+		//this._doorCurrentState = DoorState.SECURED;
+		this._doorTargetState = 100;
+		this._doorCurrentState = 100;
+		
 		this._setDoorCurrentState(this._doorCurrentState, true);
 
 		if (this.lightName) {
@@ -241,7 +246,7 @@ HttpDoorControllerAccessory.prototype = {
 		this.log.info("Received request to operate the Door: %s (currently: %s, target: %s)", this._doorStateToString(newState), this._doorStateToString(this._doorCurrentState), this._doorStateToString(this._doorTargetState));
 
 		var that = this;
-		this._httpRequest("GET", (newState == DoorState.UNSECURED ? this.doorOpenUrl : this.doorCloseUrl), this.doorSuccessField, true, function(error, response, json) {
+		this._httpRequest("GET", (newState == 0 ? this.doorOpenUrl : this.doorCloseUrl), this.doorSuccessField, true, function(error, response, json) {
 			if (error) {
 				var error = new Error("ERROR in setDoorTargetState() - " + error.message);
 				that.log.error(error.message);
@@ -251,13 +256,13 @@ HttpDoorControllerAccessory.prototype = {
 
 			that._setDoorTargetState(newState);
 
-			if (newState == DoorState.UNSECURED && that.doorOperationSeconds && that.doorOperationCloseAfterOpenAuto) {
+			if (newState == 0 && that.doorOperationSeconds && that.doorOperationCloseAfterOpenAuto) {
 				var begin=Date.now();
-				that.log.info("Entered setDoorTargetState.BeforeTimeoutEnds");
+				that.log.debug("Entered setDoorTargetState.BeforeTimeoutEnds");
 				setTimeout(function() { 
 					var end= Date.now();
 					var timeSpent=(end-begin)/1000+"secs";
-					that.log.info("Entered setDoorTargetState.AfterTimeoutEnds. Timeout was %s",timeSpent);
+					that.log.debug("Entered setDoorTargetState.AfterTimeoutEnds. Timeout was %s",timeSpent);
 					
 					that._httpRequest("GET", that.doorCloseUrl, that.doorSuccessField, true, function(error, response, json) {
 						if (error) {
@@ -437,10 +442,10 @@ HttpDoorControllerAccessory.prototype = {
 		this.DoorCurrentState.setValue(this._doorCurrentState);
 
 		if (!isFromTargetState) {
-			if ((state == DoorState.UNSECURED) || (state == DoorState.OPENING)) {
-				this._setDoorTargetState(DoorState.UNSECURED, initial, true);
-			} else if ((state == DoorState.SECURED) || (state == DoorState.CLOSING)) {
-				this._setDoorTargetState(DoorState.SECURED, initial, true);
+			if (state == 0) {
+				this._setDoorTargetState(0, initial, true);
+			} else if (state == 100) {
+				this._setDoorTargetState(100, initial, true);
 			}
 		}
 	},
@@ -459,10 +464,10 @@ HttpDoorControllerAccessory.prototype = {
 		this.DoorTargetState.setValue(this._doorTargetState);
 
 		if (!isFromCurrentState) {
-			if (state == DoorState.UNSECURED) {
-				this._setDoorCurrentState(DoorState.UNSECURED, initial, true);
-			} else if (state == DoorState.SECURED) {
-				this._setDoorCurrentState(DoorState.SECURED, initial, true);
+			if (state == 0) {
+				this._setDoorCurrentState(0, initial, true);
+			} else if (state == 100) {
+				this._setDoorCurrentState(100, initial, true);
 			}
 		}
 	},
@@ -483,9 +488,9 @@ HttpDoorControllerAccessory.prototype = {
 
 	_doorStateToString: function(doorState) {
 		switch (doorState) {
-			case DoorState.UNSECURED:
+			case 0:
 				return "OPEN";
-			case DoorState.SECURED:
+			case 100:
 				return "CLOSED";
 			case DoorState.OPENING:
 				return "OPENING";
@@ -509,13 +514,13 @@ HttpDoorControllerAccessory.prototype = {
 	_doorStateToState: function(doorState) {
 		switch (doorState.toUpperCase()) {
 			case "OPEN":
-				return DoorState.UNSECURED;
+				return 0;
 			case "CLOSED":
-				return DoorState.SECURED;
+				return 100;
 			case "OPENING":
-				return DoorState.UNSECURED;
+				return 0;
 			case "CLOSING":
-				return DoorState.SECURED;
+				return 100;
 			case "UNKNOWN":
 			case "STOPPED":
 			case "STOPPED-OPENING":

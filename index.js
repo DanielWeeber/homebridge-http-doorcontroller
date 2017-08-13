@@ -250,6 +250,25 @@ HttpDoorControllerAccessory.prototype = {
 			}
 
 			that._setDoorTargetState(newState);
+			
+			
+			if (newState == DoorState.UNSECURED && that.doorOperationSeconds && that.doorOperationCloseAfterOpenAuto) {
+				var begin=Date.now();
+				that.log.info("Entered setDoorTargetState.BeforeTimeoutEnds");
+				setTimeout(function() { 
+					var end= Date.now();
+					var timeSpent=(end-begin)/1000+"secs";
+					that.log.info("Entered setDoorTargetState.AfterTimeoutEnds. Timeout was %s",timeSpent);
+					
+					that.setDoorTargetState(DoorState.SECURED);
+						
+					});
+					
+					
+					
+				},that.doorOperationSeconds * 1000);
+			}
+/* funktioniert, aber komische HomeKit Meldung
 
 			if (newState == DoorState.UNSECURED && that.doorOperationSeconds && that.doorOperationCloseAfterOpenAuto) {
 				var begin=Date.now();
@@ -275,7 +294,8 @@ HttpDoorControllerAccessory.prototype = {
 					
 				},that.doorOperationSeconds * 1000);
 			}
-
+*/
+			
 		/*
 			// When no status is available, create a callback to set current state to target state after the specified amount of time
 			if (!that._hasDoorState()) {

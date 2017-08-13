@@ -29,7 +29,7 @@ function getConfigValue(config, key, defaultVal) {
 function HttpDoorControllerAccessory(log, config) {
 	this.log = log;
 	this.version = require("./package.json").version;
-	log("Starting HttpDoorControllerAccessory-Daniel v" + this.version);
+	log("Starting HttpDoorControllerAccessory v" + this.version);
 
 	// Read and validate HTTP configuration
 	var configurationValid = true;
@@ -93,7 +93,7 @@ function HttpDoorControllerAccessory(log, config) {
 	this.doorOperationSeconds = parseInt(getConfigValue(config, "doorOperationSeconds", 0));
 	}
 	
-	this.doorOperationCloseAfterOpenAuto = getConfigValue(config, "doorOperationCloseAfterOpenAuto", false);
+	this.doorOpenUrl = getConfigValue(config, "doorOperationCloseAfterOpenAuto", false);
 
 	
 	this.doorOpenUrl = getConfigValue(config, "doorOpenUrl", null);
@@ -249,30 +249,45 @@ HttpDoorControllerAccessory.prototype = {
 				return;
 			}
 
-			//that._setDoorTargetState(newState);
-			that.DoorCurrentState.setValue(newState);
-			that.DoorTargetState.setValue(newState);
+			that._setDoorTargetState(newState);
 
-			
+			if (newState == DoorState.UNSECURED && that.doorOperationSeconds && that.doorOperationCloseAfterOpenAuto) {
+				var begin=Date.now();
+				that.log.info("Entered setDoorTargetState.BeforeTimeoutEnds");
+				setTimeout(function() { 
+					var end= Date.now();
+					var timeSpent=(end-begin)/1000+"secs";
+					that.log.info("Entered setDoorTargetState.AfterTimeoutEnds. Timeout was %s",timeSpent);
+					
+					that._httpRequest("GET", that.doorCloseUrl, that.doorSuccessField, true, function(error, response, json) {
+						if (error) {
+							var error = new Error("ERROR in setDoorTargetState.AfterTimeoutEnds() - " + error.message);
+							that.log.error(error.message);
+							callback(error);
+							return;
+						}
+
+					that._setDoorTargetState(newState);
+						
+					});
+					
+					
+					
+				},that.doorOperationSeconds * 1000);
+			}
+
+		/*
+			// When no status is available, create a callback to set current state to target state after the specified amount of time
+			if (!that._hasDoorState()) {
+				var setDoorTargetStateFinal = function() {
+					this._setDoorCurrentState(this._doorTargetState);
+				};
+
+				setTimeout(setDoorTargetStateFinal.bind(that), that.doorOperationSeconds * 1000);
+			}
+		*/	
+			callback();
 		});
-		
-		if (newState == DoorState.UNSECURED && that.doorOperationSeconds && that.doorOperationCloseAfterOpenAuto) {
-			var begin=Date.now();
-			that.log.debug("Entered setDoorTargetState.BeforeTimeoutEnds");
-			setTimeout(function() { 
-				var end= Date.now();
-				var timeSpent=(end-begin)/1000+"secs";
-				that.log.debug("Entered setDoorTargetState.AfterTimeoutEnds. Timeout was %s",timeSpent);
-				
-				that.setDoorTargetState(DoorState.SECURED, function(error){ 
-					var errormsg = new Error("ERROR in AfterTimeout-setDoorTargetState() - " + error);
-					that.log.error(errormsg);
-				});
-				
-	
-			},that.doorOperationSeconds * 1000);
-		}
-		
 	},
 	
 	getLightCurrentState: function(callback) {
@@ -498,9 +513,9 @@ HttpDoorControllerAccessory.prototype = {
 			case "CLOSED":
 				return DoorState.SECURED;
 			case "OPENING":
-				return DoorState.OPENING;
+				return DoorState.UNSECURED;
 			case "CLOSING":
-				return DoorState.CLOSING;
+				return DoorState.SECURED;
 			case "UNKNOWN":
 			case "STOPPED":
 			case "STOPPED-OPENING":

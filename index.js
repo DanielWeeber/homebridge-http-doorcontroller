@@ -236,12 +236,14 @@ HttpDoorControllerAccessory.prototype = {
 	},
 
 	setDoorTargetState: function(newState, callback) {
+		if (newState >0 && newState <100) { newState=100; }
 		this.log.debug("Entered setDoorTargetState(newState: %s)", this._doorStateToString(newState));
 
 		if (this._doorTargetState == newState) {
 			callback();
 			return;
 		}
+		
 
 		this.log.info("Received request to operate the Door: %s (currently: %s, target: %s)", this._doorStateToString(newState), this._doorStateToString(this._doorCurrentState), this._doorStateToString(this._doorTargetState));
 

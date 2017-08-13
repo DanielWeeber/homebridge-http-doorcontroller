@@ -256,16 +256,17 @@ HttpDoorControllerAccessory.prototype = {
 		
 		if (newState == DoorState.UNSECURED && that.doorOperationSeconds && that.doorOperationCloseAfterOpenAuto) {
 			var begin=Date.now();
-			that.log.info("Entered setDoorTargetState.BeforeTimeoutEnds");
+			that.log.debug("Entered setDoorTargetState.BeforeTimeoutEnds");
 			setTimeout(function() { 
 				var end= Date.now();
 				var timeSpent=(end-begin)/1000+"secs";
-				that.log.info("Entered setDoorTargetState.AfterTimeoutEnds. Timeout was %s",timeSpent);
+				that.log.debug("Entered setDoorTargetState.AfterTimeoutEnds. Timeout was %s",timeSpent);
 				
 				that.setDoorTargetState(DoorState.SECURED, function(error){ 
 					var errormsg = new Error("ERROR in AfterTimeout-setDoorTargetState() - " + error);
 					that.log.error(errormsg);
 				});
+				
 	
 			},that.doorOperationSeconds * 1000);
 		}
@@ -495,9 +496,9 @@ HttpDoorControllerAccessory.prototype = {
 			case "CLOSED":
 				return DoorState.SECURED;
 			case "OPENING":
-				return DoorState.UNSECURED;
+				return DoorState.OPENING;
 			case "CLOSING":
-				return DoorState.SECURED;
+				return DoorState.CLOSING;
 			case "UNKNOWN":
 			case "STOPPED":
 			case "STOPPED-OPENING":

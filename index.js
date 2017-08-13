@@ -251,7 +251,7 @@ HttpDoorControllerAccessory.prototype = {
 
 			that._setDoorTargetState(newState);
 
-			callback();
+			
 		});
 		
 		if (newState == DoorState.UNSECURED && that.doorOperationSeconds && that.doorOperationCloseAfterOpenAuto) {

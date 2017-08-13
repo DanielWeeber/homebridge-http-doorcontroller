@@ -29,7 +29,7 @@ function getConfigValue(config, key, defaultVal) {
 function HttpDoorControllerAccessory(log, config) {
 	this.log = log;
 	this.version = require("./package.json").version;
-	log("Starting HttpDoorControllerAccessory v" + this.version);
+	log("Starting HttpDoorControllerAccessory-Daniel v" + this.version);
 
 	// Read and validate HTTP configuration
 	var configurationValid = true;
@@ -251,7 +251,9 @@ HttpDoorControllerAccessory.prototype = {
 
 			that._setDoorTargetState(newState);
 			
-			
+			that.log.info(newState);
+			that.log.info(that.doorOperationSeconds);
+			that.log.info(that.doorOperationCloseAfterOpenAuto);
 			if (newState == DoorState.UNSECURED && that.doorOperationSeconds && that.doorOperationCloseAfterOpenAuto) {
 				var begin=Date.now();
 				that.log.info("Entered setDoorTargetState.BeforeTimeoutEnds");

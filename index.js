@@ -262,7 +262,10 @@ HttpDoorControllerAccessory.prototype = {
 				var timeSpent=(end-begin)/1000+"secs";
 				that.log.info("Entered setDoorTargetState.AfterTimeoutEnds. Timeout was %s",timeSpent);
 				
-				that.setDoorTargetState(DoorState.SECURED);
+				that.setDoorTargetState(DoorState.SECURED, function(error){ 
+					var error = new Error("ERROR in AfterTimeout-setDoorTargetState() - " + error.message);
+					that.log.error(error.message);
+				});
 	
 			},that.doorOperationSeconds * 1000);
 		}

@@ -197,8 +197,8 @@ HttpDoorControllerAccessory.prototype = {
 
 		//this._doorTargetState = DoorState.SECURED;
 		//this._doorCurrentState = DoorState.SECURED;
-		this._doorTargetState = 100;
-		this._doorCurrentState = 100;
+		this._doorTargetState = 0;
+		this._doorCurrentState = 0;
 		
 		this._setDoorCurrentState(this._doorCurrentState, true);
 
@@ -246,7 +246,7 @@ HttpDoorControllerAccessory.prototype = {
 		this.log.info("Received request to operate the Door: %s (currently: %s, target: %s)", this._doorStateToString(newState), this._doorStateToString(this._doorCurrentState), this._doorStateToString(this._doorTargetState));
 
 		var that = this;
-		this._httpRequest("GET", (newState == 0 ? this.doorOpenUrl : this.doorCloseUrl), this.doorSuccessField, true, function(error, response, json) {
+		this._httpRequest("GET", (newState == 100 ? this.doorOpenUrl : this.doorCloseUrl), this.doorSuccessField, true, function(error, response, json) {
 			if (error) {
 				var error = new Error("ERROR in setDoorTargetState() - " + error.message);
 				that.log.error(error.message);
@@ -488,9 +488,9 @@ HttpDoorControllerAccessory.prototype = {
 
 	_doorStateToString: function(doorState) {
 		switch (doorState) {
-			case 0:
-				return "OPEN";
 			case 100:
+				return "OPEN";
+			case 0:
 				return "CLOSED";
 			case DoorState.OPENING:
 				return "OPENING";
@@ -514,13 +514,13 @@ HttpDoorControllerAccessory.prototype = {
 	_doorStateToState: function(doorState) {
 		switch (doorState.toUpperCase()) {
 			case "OPEN":
-				return 0;
+				return 100;
 			case "CLOSED":
-				return 100;
-			case "OPENING":
 				return 0;
-			case "CLOSING":
+			case "OPENING":
 				return 100;
+			case "CLOSING":
+				return 0;
 			case "UNKNOWN":
 			case "STOPPED":
 			case "STOPPED-OPENING":

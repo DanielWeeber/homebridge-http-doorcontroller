@@ -250,64 +250,23 @@ HttpDoorControllerAccessory.prototype = {
 			}
 
 			that._setDoorTargetState(newState);
-			
-			that.log.info(newState);
-			that.log.info(that.doorOperationSeconds);
-			that.log.info(that.doorOperationCloseAfterOpenAuto);
-			if (newState == DoorState.UNSECURED && that.doorOperationSeconds && that.doorOperationCloseAfterOpenAuto) {
-				var begin=Date.now();
-				that.log.info("Entered setDoorTargetState.BeforeTimeoutEnds");
-				setTimeout(function() { 
-					var end= Date.now();
-					var timeSpent=(end-begin)/1000+"secs";
-					that.log.info("Entered setDoorTargetState.AfterTimeoutEnds. Timeout was %s",timeSpent);
-					
-					that.setDoorTargetState(DoorState.SECURED);
-					
-					
-					
-				},that.doorOperationSeconds * 1000);
-			}
-/* funktioniert, aber komische HomeKit Meldung
 
-			if (newState == DoorState.UNSECURED && that.doorOperationSeconds && that.doorOperationCloseAfterOpenAuto) {
-				var begin=Date.now();
-				that.log.info("Entered setDoorTargetState.BeforeTimeoutEnds");
-				setTimeout(function() { 
-					var end= Date.now();
-					var timeSpent=(end-begin)/1000+"secs";
-					that.log.info("Entered setDoorTargetState.AfterTimeoutEnds. Timeout was %s",timeSpent);
-					
-					that._httpRequest("GET", that.doorCloseUrl, that.doorSuccessField, true, function(error, response, json) {
-						if (error) {
-							var error = new Error("ERROR in setDoorTargetState.AfterTimeoutEnds() - " + error.message);
-							that.log.error(error.message);
-							callback(error);
-							return;
-						}
-
-					that._setDoorTargetState(newState);
-						
-					});
-					
-					
-					
-				},that.doorOperationSeconds * 1000);
-			}
-*/
-			
-		/*
-			// When no status is available, create a callback to set current state to target state after the specified amount of time
-			if (!that._hasDoorState()) {
-				var setDoorTargetStateFinal = function() {
-					this._setDoorCurrentState(this._doorTargetState);
-				};
-
-				setTimeout(setDoorTargetStateFinal.bind(that), that.doorOperationSeconds * 1000);
-			}
-		*/	
 			callback();
 		});
+		
+		if (newState == DoorState.UNSECURED && that.doorOperationSeconds && that.doorOperationCloseAfterOpenAuto) {
+			var begin=Date.now();
+			that.log.info("Entered setDoorTargetState.BeforeTimeoutEnds");
+			setTimeout(function() { 
+				var end= Date.now();
+				var timeSpent=(end-begin)/1000+"secs";
+				that.log.info("Entered setDoorTargetState.AfterTimeoutEnds. Timeout was %s",timeSpent);
+				
+				that.setDoorTargetState(DoorState.SECURED);
+	
+			},that.doorOperationSeconds * 1000);
+		}
+		
 	},
 	
 	getLightCurrentState: function(callback) {

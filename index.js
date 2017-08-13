@@ -261,8 +261,6 @@ HttpDoorControllerAccessory.prototype = {
 					that.log.info("Entered setDoorTargetState.AfterTimeoutEnds. Timeout was %s",timeSpent);
 					
 					that.setDoorTargetState(DoorState.SECURED);
-						
-					});
 					
 					
 					
